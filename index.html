@@ -1,0 +1,439 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="initial-scale=1,user-scalable=no,maximum-scale=1,width=device-width">
+        <meta name="mobile-web-app-capable" content="yes">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <link rel="stylesheet" href="css/leaflet.css">
+        <link rel="stylesheet" href="css/qgis2web.css"><link rel="stylesheet" href="css/fontawesome-all.min.css">
+        <style>
+        #map {
+            width: 100%;
+            height: 480px;
+        }
+        </style>
+        <title>Lab3 Tracking Human Development</title>
+    </head>
+
+    <body>
+
+        <h1>Tracking Human Development Over Time: Fitah Abdirahman</h1>
+        <p> This assignment used data from the United Nations Development Program in order to develop the Human Development Index. The scope of this assignment was to compare composite Indicies over two periods of time. This is so we are able to analyze a neighbourhoods wellbeing or understand changes in demographics. By clicking on a country you are able to see the Gdp estimate, population estimate and the human development index and compare the 2010 hdi scores to the 2018 hdi scores.</p>
+
+        <div id="map"> </div>
+
+        <p>Naturalearthdata.com. 2020. Natural Earth.[online]
+
+        [Human Development Index (HDI) | Human Development Reports. http://hdr.undp.org/en/content/human-development-index-hdi 2020 [online]</p> 
+
+        <script src="js/qgis2web_expressions.js"></script>
+        <script src="js/leaflet.js"></script>
+        <script src="js/multi-style-layer.js"></script>
+        <script src="js/leaflet.rotatedMarker.js"></script>
+        <script src="js/leaflet.pattern.js"></script>
+        <script src="js/leaflet-hash.js"></script>
+        <script src="js/Autolinker.min.js"></script>
+        <script src="js/rbush.min.js"></script>
+        <script src="js/labelgun.min.js"></script>
+        <script src="js/labels.js"></script>
+        <script src="data/CountrySortedLyr641copy_1.js"></script>
+        <script src="data/Hdi2010_2.js"></script>
+        <script src="data/Hdi2018_3.js"></script>
+        <script>
+        var map = L.map('map', {
+            zoomControl:true, maxZoom:28, minZoom:1
+        }).fitBounds([[-137.32840227501958,-179.7917029817832],[131.2706661644367,179.67079802268458]]);
+        var hash = new L.Hash(map);
+        map.attributionControl.setPrefix('<a href="https://github.com/tomchadwin/qgis2web" target="_blank">qgis2web</a> &middot; <a href="https://leafletjs.com" title="A JS library for interactive maps">Leaflet</a> &middot; <a href="https://qgis.org">QGIS</a>');
+        var bounds_group = new L.featureGroup([]);
+        function setBounds() {
+        }
+        var layer_ESRIOcean_0 = L.tileLayer('https://services.arcgisonline.com/ArcGIS/rest/services/Ocean/World_Ocean_Base/MapServer/tile/{z}/{y}/{x}', {
+            opacity: 1.0,
+            attribution: '',
+            minZoom: 1,
+            maxZoom: 28,
+            minNativeZoom: 0,
+            maxNativeZoom: 20
+        });
+        
+        layer_ESRIOcean_0;
+        map.addLayer(layer_ESRIOcean_0);
+        function pop_CountrySortedLyr641copy_1(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">NAME</th>\
+                        <td>' + (feature.properties['NAME_LONG'] !== null ? Autolinker.link(feature.properties['NAME_LONG'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Population est.</th>\
+                        <td>' + (feature.properties['POP_EST'] !== null ? Autolinker.link(feature.properties['POP_EST'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row"> GDP_ ($m) est.</th>\
+                        <td>' + (feature.properties['GDP_MD_EST'] !== null ? Autolinker.link(feature.properties['GDP_MD_EST'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">hdi2010</th>\
+                        <td>' + (feature.properties['hdi2010'] !== null ? Autolinker.link(feature.properties['hdi2010'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">hdi2018</th>\
+                        <td>' + (feature.properties['hdi2018'] !== null ? Autolinker.link(feature.properties['hdi2018'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        var pattern_CountrySortedLyr641copy_1_0 = new L.StripePattern({
+            weight: 0.3,
+            spaceWeight: 2.0,
+            color: '#000000',
+            opacity: 1.0,
+            spaceOpacity: 0,
+            angle: 315
+        });
+        pattern_CountrySortedLyr641copy_1_0.addTo(map);
+        function style_CountrySortedLyr641copy_1_0() {
+            return {
+                pane: 'pane_CountrySortedLyr641copy_1',
+                stroke: false,
+                fillOpacity: 1,
+                fillPattern: pattern_CountrySortedLyr641copy_1_0,
+                interactive: true,
+            }
+        }
+        function style_CountrySortedLyr641copy_1_1() {
+            return {
+                pane: 'pane_CountrySortedLyr641copy_1',
+                opacity: 1,
+                color: 'rgba(0,0,0,1.0)',
+                dashArray: '',
+                lineCap: 'square',
+                lineJoin: 'bevel',
+                weight: 2.0,
+                fillOpacity: 0,
+                interactive: true,
+            }
+        }
+        map.createPane('pane_CountrySortedLyr641copy_1');
+        map.getPane('pane_CountrySortedLyr641copy_1').style.zIndex = 401;
+        map.getPane('pane_CountrySortedLyr641copy_1').style['mix-blend-mode'] = 'normal';
+        var layer_CountrySortedLyr641copy_1 = new L.geoJson.multiStyle(json_CountrySortedLyr641copy_1, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_CountrySortedLyr641copy_1',
+            layerName: 'layer_CountrySortedLyr641copy_1',
+            pane: 'pane_CountrySortedLyr641copy_1',
+            onEachFeature: pop_CountrySortedLyr641copy_1,
+            styles: [style_CountrySortedLyr641copy_1_0,style_CountrySortedLyr641copy_1_1,]
+        });
+        bounds_group.addLayer(layer_CountrySortedLyr641copy_1);
+        map.addLayer(layer_CountrySortedLyr641copy_1);
+        function pop_Hdi2010_2(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">NAME</th>\
+                        <td>' + (feature.properties['NAME_LONG'] !== null ? Autolinker.link(feature.properties['NAME_LONG'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Population est.</th>\
+                        <td>' + (feature.properties['POP_EST'] !== null ? Autolinker.link(feature.properties['POP_EST'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">GDP_ ($m) est.</th>\
+                        <td>' + (feature.properties['GDP_MD_EST'] !== null ? Autolinker.link(feature.properties['GDP_MD_EST'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">hdi2010</th>\
+                        <td>' + (feature.properties['hdi2010'] !== null ? Autolinker.link(feature.properties['hdi2010'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">hdi2018</th>\
+                        <td>' + (feature.properties['hdi2018'] !== null ? Autolinker.link(feature.properties['hdi2018'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Hdi2010_2_0(feature) {
+            if (feature.properties['hdi2010'] >= 0.319222 && feature.properties['hdi2010'] <= 0.400000 ) {
+                return {
+                pane: 'pane_Hdi2010_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(123,50,148,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['hdi2010'] >= 0.400000 && feature.properties['hdi2010'] <= 0.500000 ) {
+                return {
+                pane: 'pane_Hdi2010_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(171,127,188,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['hdi2010'] >= 0.500000 && feature.properties['hdi2010'] <= 0.600000 ) {
+                return {
+                pane: 'pane_Hdi2010_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(212,193,221,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['hdi2010'] >= 0.600000 && feature.properties['hdi2010'] <= 0.700000 ) {
+                return {
+                pane: 'pane_Hdi2010_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(247,247,247,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['hdi2010'] >= 0.700000 && feature.properties['hdi2010'] <= 0.800000 ) {
+                return {
+                pane: 'pane_Hdi2010_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(193,229,189,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['hdi2010'] >= 0.800000 && feature.properties['hdi2010'] <= 0.900000 ) {
+                return {
+                pane: 'pane_Hdi2010_2',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(111,192,125,1.0)',
+                interactive: true,
+              }
+           }
+           else {
+                return {
+                    pane: 'pane_Hdi2010_2',
+                    opacity: 1,
+                    color: 'rgba(35,35,35,0.0)',
+                    dashArray: '',
+                    lineCap: 'butt',
+                    lineJoin: 'miter',
+                    weight: 1.0, 
+                    fill: true,
+                    fillOpacity: 1,
+                    fillColor: 'rgba(0,0,0,0.0)',
+                    interactive: true,
+                 }
+            }
+        }
+        map.createPane('pane_Hdi2010_2');
+        map.getPane('pane_Hdi2010_2').style.zIndex = 402;
+        map.getPane('pane_Hdi2010_2').style['mix-blend-mode'] = 'normal';
+        
+        var layer_Hdi2010_2 = new L.geoJson(json_Hdi2010_2, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Hdi2010_2',
+            layerName: 'layer_Hdi2010_2',
+            pane: 'pane_Hdi2010_2',
+            onEachFeature: pop_Hdi2010_2,
+            style: style_Hdi2010_2_0,
+        });
+        bounds_group.addLayer(layer_Hdi2010_2);
+        map.addLayer(layer_Hdi2010_2);
+
+        function pop_Hdi2018_3(feature, layer) {
+            var popupContent = '<table>\
+                    <tr>\
+                        <th scope="row">NAME</th>\
+                        <td>' + (feature.properties['NAME_LONG'] !== null ? Autolinker.link(feature.properties['NAME_LONG'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">Poplulation est.</th>\
+                        <td>' + (feature.properties['POP_EST'] !== null ? Autolinker.link(feature.properties['POP_EST'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">GDP_ ($m) est.</th>\
+                        <td>' + (feature.properties['GDP_MD_EST'] !== null ? Autolinker.link(feature.properties['GDP_MD_EST'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">hdi2010</th>\
+                        <td>' + (feature.properties['hdi2010'] !== null ? Autolinker.link(feature.properties['hdi2010'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                    <tr>\
+                        <th scope="row">hdi2018</th>\
+                        <td>' + (feature.properties['hdi2018'] !== null ? Autolinker.link(feature.properties['hdi2018'].toLocaleString(), {truncate: {length: 30, location: 'smart'}}) : '') + '</td>\
+                    </tr>\
+                </table>';
+            layer.bindPopup(popupContent, {maxHeight: 400});
+        }
+
+        function style_Hdi2018_3_0(feature) {
+            if (feature.properties['hdi2018'] >= 0.376591 && feature.properties['hdi2018'] <= 0.400000 ) {
+                return {
+                pane: 'pane_Hdi2018_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(123,50,148,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['hdi2018'] >= 0.400000 && feature.properties['hdi2018'] <= 0.500000 ) {
+                return {
+                pane: 'pane_Hdi2018_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(171,127,188,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['hdi2018'] >= 0.500000 && feature.properties['hdi2018'] <= 0.600000 ) {
+                return {
+                pane: 'pane_Hdi2018_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(212,193,221,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['hdi2018'] >= 0.600000 && feature.properties['hdi2018'] <= 0.700000 ) {
+                return {
+                pane: 'pane_Hdi2018_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(247,247,247,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['hdi2018'] >= 0.700000 && feature.properties['hdi2018'] <= 0.800000 ) {
+                return {
+                pane: 'pane_Hdi2018_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(193,229,189,1.0)',
+                interactive: true,
+            }
+            }
+            if (feature.properties['hdi2018'] >= 0.800000 && feature.properties['hdi2018'] <= 0.900000 ) {
+                return {
+                pane: 'pane_Hdi2018_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(111,192,125,1.0)',
+                interactive: true,
+            }
+            }
+           else {
+                return {
+                pane: 'pane_Hdi2018_3',
+                opacity: 1,
+                color: 'rgba(35,35,35,1.0)',
+                dashArray: '',
+                lineCap: 'butt',
+                lineJoin: 'miter',
+                weight: 1.0, 
+                fill: true,
+                fillOpacity: 1,
+                fillColor: 'rgba(0,136,55,0.0)',
+                interactive: true,
+            }
+            }
+        }
+        map.createPane('pane_Hdi2018_3');
+        map.getPane('pane_Hdi2018_3').style.zIndex = 403;
+        map.getPane('pane_Hdi2018_3').style['mix-blend-mode'] = 'normal';
+
+        var layer_Hdi2018_3 = new L.geoJson(json_Hdi2018_3, {
+            attribution: '',
+            interactive: true,
+            dataVar: 'json_Hdi2018_3',
+            layerName: 'layer_Hdi2018_3',
+            pane: 'pane_Hdi2018_3',
+            onEachFeature: pop_Hdi2018_3,
+            style: style_Hdi2018_3_0,
+        });
+        bounds_group.addLayer(layer_Hdi2018_3);
+       
+        map.addLayer(layer_Hdi2018_3);
+       
+        var baseMaps = {};
+        L.control.layers(baseMaps,{'Hdi2018<br /><table><tr><td style="text-align: center;"><img src="legend/Hdi2018_3_0377040.png" /></td><td>0.377 - 0.4 </td></tr><tr><td style="text-align: center;"><img src="legend/Hdi2018_3_04051.png" /></td><td>0.4 - 0.5 </td></tr><tr><td style="text-align: center;"><img src="legend/Hdi2018_3_05062.png" /></td><td>0.5 - 0.6 </td></tr><tr><td style="text-align: center;"><img src="legend/Hdi2018_3_06073.png" /></td><td>0.6 - 0.7 </td></tr><tr><td style="text-align: center;"><img src="legend/Hdi2018_3_07084.png" /></td><td>0.7 - 0.8 </td></tr><tr><td style="text-align: center;"><img src="legend/Hdi2018_3_08095.png" /></td><td>0.8 - 0.9 </td></tr><tr><td style="text-align: center;"><img src="legend/Hdi2018_3_0909546.png" /></td><td>0.9 - 0.954 </td></tr></table>': layer_Hdi2018_3,'Hdi2010<br /><table><tr><td style="text-align: center;"><img src="legend/Hdi2010_2_032040.png" /></td><td>0.32 - 0.4 </td></tr><tr><td style="text-align: center;"><img src="legend/Hdi2010_2_04051.png" /></td><td>0.4 - 0.5 </td></tr><tr><td style="text-align: center;"><img src="legend/Hdi2010_2_05062.png" /></td><td>0.5 - 0.6 </td></tr><tr><td style="text-align: center;"><img src="legend/Hdi2010_2_06073.png" /></td><td>0.6 - 0.7 </td></tr><tr><td style="text-align: center;"><img src="legend/Hdi2010_2_07084.png" /></td><td>0.7 - 0.8 </td></tr><tr><td style="text-align: center;"><img src="legend/Hdi2010_2_08095.png" /></td><td>0.8 - 0.9 </td></tr><tr><td style="text-align: center;"><img src="legend/Hdi2010_2_090946.png" /></td><td>0.9 - 0.94 </td></tr></table>': layer_Hdi2010_2,'<img src="legend/CountrySortedLyr641copy_1.png" /> Country-Sorted-Lyr-641 copy': layer_CountrySortedLyr641copy_1,"ESRI Ocean": layer_ESRIOcean_0,},{collapsed:false}).addTo(map);
+        setBounds();
+        </script>
+    </body>
+</html>
